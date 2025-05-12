@@ -1,0 +1,55 @@
+{
+    "Name": "甘雨",
+    "Designation": "循循守月",
+    "Fullname": "甘雨（Ganyu）",
+    "Birthday": "12月2日",
+    "Weapon": "弓",
+    "Country": "",
+    "Description": "月海亭的秘书，体内流淌着仙兽「麒麟」的血脉。",
+    "Gender": "女",
+    "Race": "半仙（麒麟）",
+    "Star": "5",
+    "Vision": "冰",
+    "Type": "限定UP",
+    "Constellation": "仙麟座",
+    "ActualInstallationTime": "2021年01月12日（1.2版本）",
+    "Job": "「月海亭」秘书",
+    "Nicknames": [
+        "璃月七星的秘书",
+        "椰羊",
+        "王小美",
+        "鸡腿猎人",
+        "咕噜咕噜滚下山真君",
+        "肝雨",
+        "走路上山真君",
+        "通宵熬夜真君"
+    ],
+    "TAG": [
+        "嘲讽",
+        "减抗",
+        "伤害提升",
+        "自身暴击率提升",
+        "锻造返还"
+    ],
+    "Photos": {
+        "1": "https:\/\/patchwiki.biligame.com\/images\/ys\/0\/0a\/7bpzoigphsck8n51qlxiwcwgtq6q6oc.png",
+        "2": "https:\/\/patchwiki.biligame.com\/images\/ys\/b\/b3\/4hmr2i7yijkl6b2gyusa4s5jfwktzbg.png",
+        "wish": "https:\/\/patchwiki.biligame.com\/images\/ys\/d\/da\/80cmpy7ubhja1o81nx67709701et0fe.png"
+    },
+    "CV": {
+        "Chinese": "林簌",
+        "Japanese": "上田丽奈",
+        "Korean": "金仙惠",
+        "English": "珍妮佛·罗希"
+    },
+    "Stories": {
+        "Pron": "在璃月，百姓们大多对「玉京台」的生活",
+        "1": "甘雨并非七星中「某一颗星」的秘书，而是辅助「璃月七星」这个整体的秘书。",
+        "2": "「我的工作，是为璃月的多数生命，谋求最大的福祉。」",
+        "3": "千年有多长？",
+        "4": "一旦脱离了工作的范畴，甘雨就很容易显露出本性上的与众不同之处。",
+        "5": "甘雨有着仙兽「麒麟」血脉这件事情，在璃月港鲜为人知。",
+        "Things": "记载着玉京台常见植物形态特征及习性的手写册，秀美的字体正是出自甘雨本人的手笔。",
+        "Vision": "记载着玉京台常见植物形态特征及习性的手写册，秀美的字体正是出自甘雨本人的手笔。"
+    }
+}
