@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>你会穿越成为原神中的哪个角色</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            background-color: #000;
+            background-image: url('https://uploadstatic.mihoyo.com/contentweb/20200720/2020072015344780554.jpg');
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            color: #fff;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+            overflow-x: hidden;
+            transition: background-image 0.5s ease-in-out;
+        }
+        
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: inherit;
+            filter: blur(5px);
+            z-index: -2;
+            transform: scale(1.02);
+        }
+        
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: -1;
+        }
+        
+        .container {
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            width: 90%;
+            max-width: 800px;
+            margin: 30px auto;
+            position: relative;
+            z-index: 1;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        h1 {
+            color: #f8d64e;
+            margin-bottom: 20px;
+            font-size: 2.2em;
+        }
+        
+        #result {
+            margin: 20px 0;
+            position: relative;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+        }
+        
+        #characterImage {
+            max-width: 100%;
+            max-height: 70vh;
+            width: auto;
+            height: auto;
+            border-radius: 10px;
+            border: 4px solid #f8d64e;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.8);
+            margin: 0 auto;
+            display: block;
+            transform: scale(1);
+            transition: transform 0.3s ease;
+            object-fit: contain;
+        }
+        
+        #characterImage:hover {
+            transform: scale(1.03);
+        }
+        
+        #characterName {
+            font-size: 32px;
+            font-weight: bold;
+            color: #f8d64e;
+            margin: 20px 0;
+            padding: 10px 20px;
+            background-color: rgba(0, 0, 0, 0.6);
+            border-radius: 50px;
+            display: inline-block;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+        
+        button {
+            background-color: #f8d64e;
+            color: #2c2c2c;
+            border: none;
+            padding: 12px 25px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 50px;
+            transition: all 0.3s;
+            font-weight: bold;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+            min-width: 160px;
+        }
+        
+        button:hover {
+            background-color: #ffea9e;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        button:active {
+            transform: translateY(1px);
+        }
+        
+        button.secondary {
+            background-color: rgba(248, 214, 78, 0.2);
+            color: #f8d64e;
+        }
+        
+        button.secondary:hover {
+            background-color: rgba(248, 214, 78, 0.3);
+        }
+        
+        button::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+            pointer-events: none;
+        }
+        
+        button:hover::after {
+            left: 100%;
+        }
+        
+        .history {
+            margin-top: 30px;
+            text-align: center;
+            background-color: rgba(20, 20, 20, 0.6);
+            padding: 15px;
+            border-radius: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            width: 100%;
+        }
+        
+        .history h3 {
+            color: #f8d64e;
+            border-bottom: 1px solid #f8d64e;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        .history-item {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .history-item:hover {
+            background-color: rgba(248, 214, 78, 0.1);
+        }
+        
+        .history-item img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+            object-fit: cover;
+            border: 2px solid #f8d64e;
+        }
+        
+        .flavor-text {
+            font-style: italic;
+            margin: 10px 0 30px;
+            color: #ccc;
+            font-size: 18px;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 4px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #f8d64e;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .particle {
+            position: absolute;
+            background-color: rgba(248, 214, 78, 0.6);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        
+        .character-detail {
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: left;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #f8d64e;
+            width: 100%;
+        }
+        
+        .character-detail h3 {
+            color: #f8d64e;
+            border-bottom: 1px solid #f8d64e;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .detail-label {
+            font-weight: bold;
+            color: #f8d64e;
+        }
+        
+        .detail-value {
+            color: #fff;
+        }
+        
+        .tag {
+            display: inline-block;
+            background-color: rgba(248, 214, 78, 0.2);
+            color: #f8d64e;
+            padding: 3px 8px;
+            border-radius: 10px;
+            margin: 2px;
+            font-size: 0.9em;
+        }
+        
+        .nickname {
+            display: inline-block;
+            background-color: rgba(78, 156, 248, 0.2);
+            color: #4e9cf8;
+            padding: 3px 8px;
+            border-radius: 10px;
+            margin: 2px;
+            font-size: 0.9em;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .photo-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .photo-gallery img {
+            max-width: 100px;
+            max-height: 100px;
+            border-radius: 5px;
+            border: 1px solid #f8d64e;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .photo-gallery img:hover {
+            transform: scale(1.1);
+        }
+        
+        #drawButton {
+            margin: 20px auto;
+            display: block;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                width: 95%;
+            }
+            
+            #characterName {
+                font-size: 24px;
+            }
+            
+            button {
+                padding: 10px 20px;
+                min-width: 140px;
+            }
+            
+            .detail-grid {
+                grid-template-columns: 100px 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    
+    <div class="container">
+        <h1>你会穿越成为原神中的哪个角色？</h1>
+        <p class="flavor-text">点击下方按钮，揭开命运的面纱...</p>
+        
+        <div id="result">
+            <img id="characterImage" class="hidden">
+            <div id="characterName">准备就绪</div>
+            
+            <div id="characterDetail" class="character-detail hidden"></div>
+            
+            <div id="actionButtons" class="action-buttons hidden">
+                <button id="resetButton" class="secondary">返回初始</button>
+                <button id="detailButton">查看角色详情</button>
+            </div>
+        </div>
+        
+        <button id="drawButton">开始穿越</button>
+        
+        <div class="history">
+            <h3>历史结果</h3>
+            <div id="historyList"></div>
+        </div>
+    </div>
+
+    <script>
+        // 路径前缀
+        const IMAGE_PATH_PREFIX = '官方原图/';
+        const JSON_PATH_PREFIX = '角色详情/';
+        const DEFAULT_BACKGROUND = 'https://uploadstatic.mihoyo.com/contentweb/20200720/2020072015344780554.jpg';
+        
+        // 直接嵌入角色数据
+        const characterImages = [
+  {"file": "0.0 空.png", "character": "空", json: "空.json"},
+    {"file": "0.0 荧.png", "character": "荧", json: "荧.json"},
+    {"file": "1.0 安柏.png", "character": "安柏", json: "安柏.json"},
+    {"file": "1.0 芭芭拉.jpg", "character": "芭芭拉", json: "芭芭拉.json"},
+    {"file": "1.0 班尼特.png", "character": "班尼特", json: "班尼特.json"},
+    {"file": "1.0 北斗.jpg", "character": "北斗", json: "北斗.json"},
+    {"file": "1.0 迪卢克.png", "character": "迪卢克", json: "迪卢克.json"},
+    {"file": "1.0 菲谢尔.png", "character": "菲谢尔", json: "菲谢尔.json"},
+    {"file": "1.0 凯亚.png", "character": "凯亚", json: "凯亚.json"},
+    {"file": "1.0 可莉.png", "character": "可莉", json: "可莉.json"},
+    {"file": "1.0 刻晴.png", "character": "刻晴", json: "刻晴.json"},
+    {"file": "1.0 雷泽.png", "character": "雷泽", json: "雷泽.json"},
+    {"file": "1.0 丽莎.png", "character": "丽莎", json: "丽莎.json"},
+    {"file": "1.0 莫娜.png", "character": "莫娜", json: "莫娜.json"},
+    {"file": "1.0 凝光.jpg", "character": "凝光", json: "凝光.json"},
+    {"file": "1.0 诺艾尔.jpg", "character": "诺艾尔", json: "诺艾尔.json"},
+    {"file": "1.0 七七.png", "character": "七七", json: "七七.json"},
+    {"file": "1.0 琴.png", "character": "琴", json: "琴.json"},
+    {"file": "1.0 砂糖.png", "character": "砂糖", json: "砂糖.json"},
+    {"file": "1.0 温迪.png", "character": "温迪", json: "温迪.json"},
+    {"file": "1.0 香菱.png", "character": "香菱", json: "香菱.json"},
+    {"file": "1.0 行秋.jpg", "character": "行秋", json: "行秋.json"},
+    {"file": "1.0 重云.png", "character": "重云", json: "重云.json"},
+    {"file": "1.1 达达利亚.png", "character": "达达利亚", json: "达达利亚.json"},
+    {"file": "1.1 迪奥娜.jpg", "character": "迪奥娜", json: "迪奥娜.json"},
+    {"file": "1.1 辛焱.png", "character": "辛焱", json: "辛焱.json"},
+    {"file": "1.1 钟离.png", "character": "钟离", json: "钟离.json"},
+    {"file": "1.2 阿贝多.png", "character": "阿贝多", json: "阿贝多.json"},
+    {"file": "1.2 甘雨.png", "character": "甘雨", json: "甘雨.json"},
+    {"file": "1.3 胡桃.png", "character": "胡桃", json: "胡桃.json"},
+    {"file": "1.3 魈.png", "character": "魈", json: "魈.json"},
+    {"file": "1.4 罗莎莉亚.png", "character": "罗莎莉亚", json: "罗莎莉亚.json"},
+    {"file": "1.5 烟绯.png", "character": "烟绯", json: "烟绯.json"},
+    {"file": "1.5 优菈.png", "character": "优菈", json: "优菈.json"},
+    {"file": "1.6 枫原万叶.png", "character": "枫原万叶", json: "枫原万叶.json"},
+    {"file": "2.0 神里绫华.png", "character": "神里绫华", json: "神里绫华.json"},
+    {"file": "2.0 早柚.png", "character": "早柚", json: "早柚.json"},
+    {"file": "2.0 长野原宵宫.png", "character": "长野原宵宫", json: "长野原宵宫.json"},
+    {"file": "2.1 埃洛伊.png", "character": "埃洛伊", json: "埃洛伊.json"},
+    {"file": "2.1 九条裟罗.png", "character": "九条裟罗", json: "九条裟罗.json"},
+    {"file": "2.1 雷电将军.png", "character": "雷电将军", json: "雷电将军.json"},
+    {"file": "2.1 珊瑚宫心海.png", "character": "珊瑚宫心海", json: "珊瑚宫心海.json"},
+    {"file": "2.2 托马.png", "character": "托马", json: "托马.json"},
+    {"file": "2.3 荒泷一斗.png", "character": "荒泷一斗", json: "荒泷一斗.json"},
+    {"file": "2.3 五郎.png", "character": "五郎", json: "五郎.json"},
+    {"file": "2.4 申鹤.png", "character": "申鹤", json: "申鹤.json"},
+    {"file": "2.4 云堇.png", "character": "云堇", json: "云堇.json"},
+    {"file": "2.5 八重神子.png", "character": "八重神子", json: "八重神子.json"},
+    {"file": "2.6 神里绫人.png", "character": "神里绫人", json: "神里绫人.json"},
+    {"file": "2.7 久岐忍.png", "character": "久岐忍", json: "久岐忍.json"},
+    {"file": "2.7 夜兰.png", "character": "夜兰", json: "夜兰.json"},
+    {"file": "2.8 鹿野院平藏.png", "character": "鹿野院平藏", json: "鹿野院平藏.json"},
+    {"file": "3.0 多莉.png", "character": "多莉", json: "多莉.json"},
+    {"file": "3.0 柯莱.png", "character": "柯莱", json: "柯莱.json"},
+    {"file": "3.0 提纳里.png", "character": "提纳里", json: "提纳里.json"},
+    {"file": "3.1 坎蒂丝.png", "character": "坎蒂丝", json: "坎蒂丝.json"},
+    {"file": "3.1 妮露.png", "character": "妮露", json: "妮露.json"},
+    {"file": "3.1 赛诺.png", "character": "赛诺", json: "赛诺.json"},
+    {"file": "3.2 莱依拉.png", "character": "莱依拉", json: "莱依拉.json"},
+    {"file": "3.2 纳西妲.png", "character": "纳西妲", json: "纳西妲.json"},
+    {"file": "3.3 珐露珊.png", "character": "珐露珊", json: "珐露珊.json"},
+    {"file": "3.3 流浪者.png", "character": "流浪者", json: "流浪者.json"},
+    {"file": "3.4 艾尔海森.png", "character": "艾尔海森", json: "艾尔海森.json"},
+    {"file": "3.4 瑶瑶.png", "character": "瑶瑶", json: "瑶瑶.json"},
+    {"file": "3.5 迪希雅.png", "character": "迪希雅", json: "迪希雅.json"},
+    {"file": "3.6 白术.png", "character": "白术", json: "白术.json"},
+    {"file": "3.6 卡维.png", "character": "卡维", json: "卡维.json"},
+    {"file": "3.6 米卡.png", "character": "米卡", json: "米卡.json"},
+    {"file": "3.7 绮良良.png", "character": "绮良良", json: "绮良良.json"},
+    {"file": "4.0 菲米尼.png", "character": "菲米尼", json: "菲米尼.json"},
+    {"file": "4.0 菲米尼_2.png", "character": "菲米尼", json: "菲米尼.json"},
+    {"file": "4.0 林尼_1.png", "character": "林尼", json: "林尼.json"},
+    {"file": "4.0 林尼_2.png", "character": "林尼", json: "林尼.json"},
+    {"file": "4.0 琳妮特.png", "character": "琳妮特", json: "琳妮特.json"},
+    {"file": "4.0 琳妮特_2.png", "character": "琳妮特", json: "琳妮特.json"},
+    {"file": "4.1 莱欧斯利.png", "character": "莱欧斯利", json: "莱欧斯利.json"},
+    {"file": "4.1 那维莱特.png", "character": "那维莱特", json: "那维莱特.json"},
+    {"file": "4.2 芙宁娜_1.png", "character": "芙宁娜", json: "芙宁娜.json"},
+    {"file": "4.2 芙宁娜_2.png", "character": "芙宁娜", json: "芙宁娜.json"},
+    {"file": "4.2 夏洛蒂.png", "character": "夏洛蒂", json: "夏洛蒂.json"},
+    {"file": "4.3 娜维娅.png", "character": "娜维娅", json: "娜维娅.json"},
+    {"file": "4.3 夏沃蕾.png", "character": "夏沃蕾", json: "夏沃蕾.json"},
+    {"file": "4.4 嘉明.png", "character": "嘉明", json: "嘉明.json"},
+    {"file": "4.4 闲云.png", "character": "闲云", json: "闲云.json"},
+    {"file": "4.5 千织.png", "character": "千织", json: "千织.json"},
+    {"file": "4.6 阿蕾奇诺.png", "character": "阿蕾奇诺", json: "阿蕾奇诺.json"},
+    {"file": "4.7 克洛琳德.png", "character": "克洛琳德", json: "克洛琳德.json"},
+    {"file": "4.7 赛索斯.png", "character": "赛索斯", json: "赛索斯.json"},
+    {"file": "4.7 希格雯.jpg", "character": "希格雯", json: "希格雯.json"},
+    {"file": "4.8 艾梅莉埃.jpg", "character": "艾梅莉埃", json: "艾梅莉埃.json"}
+        ];
+
+        let history = [];
+        let currentCharacter = null;
+        let currentCharacterData = null;
+        
+        // 创建背景粒子效果
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                const size = Math.random() * 5 + 2;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                const duration = Math.random() * 20 + 10;
+                const delay = Math.random() * 5;
+                particle.style.animation = `float ${duration}s ease-in-out ${delay}s infinite`;
+                
+                particlesContainer.appendChild(particle);
+            }
+            
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes float {
+                    0%, 100% { transform: translate(0, 0); opacity: 0.6; }
+                    25% { transform: translate(${Math.random() * 50 - 25}px, ${Math.random() * 50 - 25}px); }
+                    50% { transform: translate(${Math.random() * 50 - 25}px, ${Math.random() * 50 - 25}px); opacity: 0.3; }
+                    75% { transform: translate(${Math.random() * 50 - 25}px, ${Math.random() * 50 - 25}px); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        // 智能调整背景尺寸
+        function adjustBackgroundSize(imgWidth, imgHeight) {
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+            const imgRatio = imgWidth / imgHeight;
+            const windowRatio = windowWidth / windowHeight;
+            
+            if (imgRatio > windowRatio) {
+                // 宽图，优先保证高度覆盖
+                return 'auto 100%';
+            } else {
+                // 高图，优先保证宽度覆盖
+                return '100% auto';
+            }
+        }
+        
+        // 更换背景函数
+        function changeBackground(imageUrl) {
+            const img = new Image();
+            img.onload = function() {
+                const bgSize = adjustBackgroundSize(img.width, img.height);
+                document.body.style.backgroundImage = `url('${imageUrl}')`;
+                document.body.style.backgroundSize = bgSize;
+                document.body.style.backgroundPosition = 'center center';
+                document.body.style.backgroundRepeat = 'no-repeat';
+            };
+            img.onerror = function() {
+                console.error('背景图片加载失败:', imageUrl);
+                resetBackground();
+            };
+            img.src = imageUrl;
+        }
+        
+        // 重置背景为默认
+        function resetBackground() {
+            document.body.style.backgroundImage = `url('${DEFAULT_BACKGROUND}')`;
+            document.body.style.backgroundSize = 'cover';
+            document.body.style.backgroundPosition = 'center center';
+            document.body.style.backgroundRepeat = 'no-repeat';
+        }
+        
+        // 窗口大小变化时重新调整背景
+        window.addEventListener('resize', function() {
+            if (currentCharacterData && currentCharacterData.Photos && currentCharacterData.Photos["1"]) {
+                changeBackground(currentCharacterData.Photos["1"]);
+            }
+        });
+        
+        // 加载角色详情数据
+        async function loadCharacterDetail(jsonFile) {
+            try {
+                const fullPath = JSON_PATH_PREFIX + jsonFile;
+                const response = await fetch(fullPath);
+                if (!response.ok) throw new Error('角色详情加载失败');
+                const data = await response.json();
+                
+                // 设置背景图片
+                if (data.Photos && data.Photos["1"]) {
+                    changeBackground(data.Photos["1"]);
+                }
+                
+                return data;
+            } catch (error) {
+                console.error('加载角色详情失败:', error);
+                return null;
+            }
+        }
+        
+        // 显示角色详情
+        async function showCharacterDetail() {
+            if (!currentCharacter) return;
+            
+            if (!currentCharacterData) {
+                currentCharacterData = await loadCharacterDetail(currentCharacter.json);
+            }
+            
+            if (!currentCharacterData) {
+                alert('加载角色详情失败，请检查控制台');
+                return;
+            }
+            
+            const detailElement = document.getElementById('characterDetail');
+            detailElement.innerHTML = '';
+            
+            const detailContent = document.createElement('div');
+            
+            detailContent.innerHTML += `
+                <h3>${currentCharacterData.Name || currentCharacter.character} - 角色详情</h3>
+                <div class="detail-grid">
+                    ${currentCharacterData.Designation ? `<div class="detail-label">称号:</div><div class="detail-value">${currentCharacterData.Designation}</div>` : ''}
+                    ${currentCharacterData.Fullname ? `<div class="detail-label">全名:</div><div class="detail-value">${currentCharacterData.Fullname}</div>` : ''}
+                    ${currentCharacterData.Birthday ? `<div class="detail-label">生日:</div><div class="detail-value">${currentCharacterData.Birthday}</div>` : ''}
+                    ${currentCharacterData.Weapon ? `<div class="detail-label">武器类型:</div><div class="detail-value">${currentCharacterData.Weapon}</div>` : ''}
+                    ${currentCharacterData.Vision ? `<div class="detail-label">神之眼:</div><div class="detail-value">${currentCharacterData.Vision}</div>` : ''}
+                    ${currentCharacterData.Star ? `<div class="detail-label">星级:</div><div class="detail-value">${'★'.repeat(currentCharacterData.Star)}</div>` : ''}
+                    ${currentCharacterData.Job ? `<div class="detail-label">职业:</div><div class="detail-value">${currentCharacterData.Job}</div>` : ''}
+                    ${currentCharacterData.Race ? `<div class="detail-label">种族:</div><div class="detail-value">${currentCharacterData.Race}</div>` : ''}
+                    ${currentCharacterData.Gender ? `<div class="detail-label">性别:</div><div class="detail-value">${currentCharacterData.Gender}</div>` : ''}
+                    ${currentCharacterData.ActualInstallationTime ? `<div class="detail-label">上线时间:</div><div class="detail-value">${currentCharacterData.ActualInstallationTime}</div>` : ''}
+                </div>
+            `;
+            
+            if (currentCharacterData.Description) {
+                detailContent.innerHTML += `
+                    <h4>角色描述</h4>
+                    <p>${currentCharacterData.Description}</p>
+                `;
+            }
+            
+            if (currentCharacterData.Nicknames && currentCharacterData.Nicknames.length > 0) {
+                let nicknamesHTML = currentCharacterData.Nicknames.map(nick => 
+                    `<span class="nickname">${nick}</span>`
+                ).join('');
+                detailContent.innerHTML += `
+                    <h4>昵称</h4>
+                    <div>${nicknamesHTML}</div>
+                `;
+            }
+            
+            if (currentCharacterData.TAG && currentCharacterData.TAG.length > 0) {
+                let tagsHTML = currentCharacterData.TAG.map(tag => 
+                    `<span class="tag">${tag}</span>`
+                ).join('');
+                detailContent.innerHTML += `
+                    <h4>角色标签</h4>
+                    <div>${tagsHTML}</div>
+                `;
+            }
+            
+            if (currentCharacterData.CV) {
+                detailContent.innerHTML += `
+                    <h4>配音演员</h4>
+                    <div class="detail-grid">
+                        ${currentCharacterData.CV.Chinese ? `<div class="detail-label">中文:</div><div class="detail-value">${currentCharacterData.CV.Chinese}</div>` : ''}
+                        ${currentCharacterData.CV.Japanese ? `<div class="detail-label">日语:</div><div class="detail-value">${currentCharacterData.CV.Japanese}</div>` : ''}
+                        ${currentCharacterData.CV.Korean ? `<div class="detail-label">韩语:</div><div class="detail-value">${currentCharacterData.CV.Korean}</div>` : ''}
+                        ${currentCharacterData.CV.English ? `<div class="detail-label">英语:</div><div class="detail-value">${currentCharacterData.CV.English}</div>` : ''}
+                    </div>
+                `;
+            }
+            
+            if (currentCharacterData.Stories) {
+                let storiesHTML = '';
+                for (const [key, value] of Object.entries(currentCharacterData.Stories)) {
+                    if (key !== 'Pron' && value) {
+                        storiesHTML += `<p><strong>${key}:</strong> ${value}</p>`;
+                    }
+                }
+                if (storiesHTML) {
+                    detailContent.innerHTML += `
+                        <h4>角色故事</h4>
+                        ${storiesHTML}
+                    `;
+                }
+            }
+            
+            if (currentCharacterData.Photos) {
+                let photosHTML = '';
+                for (const [key, value] of Object.entries(currentCharacterData.Photos)) {
+                    if (value) {
+                        photosHTML += `<img src="${value}" alt="${currentCharacterData.Name || currentCharacter.character} ${key}" title="${currentCharacterData.Name || currentCharacter.character} ${key}">`;
+                    }
+                }
+                if (photosHTML) {
+                    detailContent.innerHTML += `
+                        <h4>角色图片</h4>
+                        <div class="photo-gallery">${photosHTML}</div>
+                    `;
+                }
+            }
+            
+            detailElement.appendChild(detailContent);
+            detailElement.classList.remove('hidden');
+            document.getElementById('detailButton').textContent = '隐藏详情';
+        }
+        
+        // 隐藏角色详情
+        function hideCharacterDetail() {
+            document.getElementById('characterDetail').classList.add('hidden');
+            document.getElementById('detailButton').textContent = '查看角色详情';
+        }
+        
+        // 重置到初始状态
+        function resetToInitial() {
+            document.getElementById('characterImage').classList.add('hidden');
+            document.getElementById('characterName').textContent = `已加载 ${characterImages.length} 个角色，准备就绪`;
+            document.getElementById('characterDetail').classList.add('hidden');
+            document.getElementById('characterDetail').innerHTML = '';
+            document.getElementById('actionButtons').classList.add('hidden');
+            document.getElementById('drawButton').style.display = 'block';
+            document.getElementById('detailButton').textContent = '查看角色详情';
+            resetBackground();
+            currentCharacter = null;
+            currentCharacterData = null;
+        }
+        
+        // 随机抽取角色
+        document.getElementById('drawButton').addEventListener('click', async function() {
+            if (characterImages.length === 0) {
+                document.getElementById('characterName').textContent = '没有可用的角色数据';
+                return;
+            }
+            
+            const nameElement = document.getElementById('characterName');
+            nameElement.innerHTML = '<span class="loading"></span> 正在穿越提瓦特大陆...';
+            
+            const imgElement = document.getElementById('characterImage');
+            imgElement.classList.add('hidden');
+            document.getElementById('characterDetail').classList.add('hidden');
+            document.getElementById('actionButtons').classList.add('hidden');
+            
+            setTimeout(async () => {
+                const randomIndex = Math.floor(Math.random() * characterImages.length);
+                currentCharacter = characterImages[randomIndex];
+                currentCharacterData = null;
+                
+                const img = new Image();
+                img.src = IMAGE_PATH_PREFIX + currentCharacter.file;
+                img.onload = function() {
+                    imgElement.src = img.src;
+                    imgElement.classList.remove('hidden');
+                    imgElement.alt = currentCharacter.character;
+                    
+                    nameElement.textContent = currentCharacter.character;
+                    
+                    document.getElementById('actionButtons').classList.remove('hidden');
+                    document.getElementById('drawButton').style.display = 'none';
+                    
+                    history.unshift({
+                        file: currentCharacter.file,
+                        character: currentCharacter.character,
+                        json: currentCharacter.json
+                    });
+                    if (history.length > 5) {
+                        history.pop();
+                    }
+                    
+                    updateHistory();
+                };
+                
+                img.onerror = function() {
+                    nameElement.textContent = '图片加载失败: ' + currentCharacter.character;
+                };
+            }, 1000);
+        });
+        
+        // 查看/隐藏详情按钮事件
+        document.getElementById('detailButton').addEventListener('click', function() {
+            const detailElement = document.getElementById('characterDetail');
+            if (detailElement.classList.contains('hidden')) {
+                showCharacterDetail();
+        } else {
+            hideCharacterDetail();
+        }
+        });
+
+                    // 返回初始按钮事件
+    document.getElementById('resetButton').addEventListener('click', resetToInitial);
+    
+    // 更新历史记录显示
+    function updateHistory() {
+        const historyList = document.getElementById('historyList');
+        historyList.innerHTML = '';
+        
+        if (history.length === 0) {
+            historyList.innerHTML = '<div style="color:#aaa; padding:10px;">暂无历史记录</div>';
+            return;
+        }
+        
+        history.forEach((item, index) => {
+            const historyItem = document.createElement('div');
+            historyItem.className = 'history-item';
+            
+            const img = document.createElement('img');
+            img.src = IMAGE_PATH_PREFIX + item.file;
+            img.alt = item.character;
+            img.onerror = function() {
+                this.style.display = 'none';
+            };
+            
+            const text = document.createElement('span');
+            text.textContent = `${index + 1}. ${item.character}`;
+            
+            historyItem.addEventListener('click', async () => {
+                document.getElementById('characterImage').src = img.src;
+                document.getElementById('characterImage').classList.remove('hidden');
+                document.getElementById('characterImage').alt = item.character;
+                document.getElementById('characterName').textContent = item.character;
+                document.getElementById('actionButtons').classList.remove('hidden');
+                document.getElementById('drawButton').style.display = 'none';
+                
+                currentCharacter = item;
+                currentCharacterData = await loadCharacterDetail(item.json);
+                document.getElementById('characterDetail').classList.add('hidden');
+                document.getElementById('detailButton').textContent = '查看角色详情';
+            });
+            
+            historyItem.appendChild(img);
+            historyItem.appendChild(text);
+            historyList.appendChild(historyItem);
+        });
+    }
+    
+    // 初始化
+    document.addEventListener('DOMContentLoaded', () => {
+        createParticles();
+        document.getElementById('characterName').textContent = `已加载 ${characterImages.length} 个角色，准备就绪`;
+        resetBackground();
+    });
+</script>
+</body> 
+</html>
